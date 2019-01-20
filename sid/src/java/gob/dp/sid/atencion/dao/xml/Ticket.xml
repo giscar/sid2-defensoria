@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="gob.dp.sid.atencion.dao.TicketDAO">
+    <resultMap id="ticketMap" type="gob.dp.sid.atencion.entity.Ticket">
+        <result property="idTicket" column="N_ID_TICKET" jdbcType="INTEGER"/>
+        <result property="idVisita" column="N_ID_VISITA" jdbcType="INTEGER"/>
+        <result property="idPersona" column="N_ID_PERSONA" jdbcType="INTEGER"/>
+        <result property="idTramite" column="N_ID_TRAMITE" jdbcType="INTEGER"/>
+        <result property="idSede" column="N_ID_SEDE" jdbcType="INTEGER"/>        
+        <result property="nroTicket" column="C_NRO_TICKET" jdbcType="VARCHAR"/>
+        <result property="atencionPreferente" column="N_IND_PREFERENTE" jdbcType="INTEGER"/>
+        <result property="estadoTicket" column="N_ESTADO_TICKET" jdbcType="INTEGER"/>
+        <result property="estadoRegistro" column="N_ESTADO_REGISTRO" jdbcType="INTEGER"/>      
+        <result property="usuarioCreacion" column="C_USUARIO_CREA" jdbcType="VARCHAR"/>
+        <result property="fechaCreacion" column="D_FECHA_CREA" jdbcType="DATE"/>
+    </resultMap>
+    
+    <resultMap id="atencionTicketMap" type="gob.dp.sid.atencion.entity.AtencionTicket">
+        <result property="idAtencionTicket" column="N_ID_DET_TICKET" jdbcType="INTEGER"/>
+        <result property="idTicket" column="N_ID_TICKET" jdbcType="INTEGER"/>
+        <result property="nroTicket" column="C_NRO_TICKET" jdbcType="VARCHAR"/>
+        <result property="estadoTicket" column="N_ESTADO_TICKET" jdbcType="INTEGER"/>
+        <result property="idPersona" column="N_ID_PERS" jdbcType="INTEGER"/>
+        <result property="dniPersona" column="C_DNI" jdbcType="VARCHAR"/>        
+        <result property="nombrePersona" column="C_NOMBRES" jdbcType="VARCHAR"/>
+        <result property="apePatPersona" column="C_APELLIDO_PATERNO" jdbcType="VARCHAR"/>
+        <result property="apeMatPersona" column="C_APELLIDO_MATERNO" jdbcType="VARCHAR"/>
+        <result property="codMotivo" column="C_MOTIVO" jdbcType="VARCHAR"/>
+        <result property="descMotivo" column="C_DESC_MOTIVO" jdbcType="VARCHAR"/>
+        <result property="codAtencion" column="C_TIPO_ATENCION" jdbcType="VARCHAR"/>
+        <result property="descAtencion" column="C_DESC_ATENCION" jdbcType="VARCHAR"/>
+        <result property="codTramite" column="C_TIPO_TRAMITE" jdbcType="VARCHAR"/>
+        <result property="descTramite" column="C_DESC_TRAMITE" jdbcType="VARCHAR"/>
+        <result property="idSede" column="N_ID_SEDE" jdbcType="INTEGER"/>
+        <result property="codigoUsuarioAtencionTicket" column="CODIGO_USUARIO" jdbcType="VARCHAR"/>
+        <result property="fechaInicioAtencionTicket" column="D_FECHA_INI_ATE" jdbcType="DATE"/>
+        <result property="fechaFinAtencionTicket" column="D_FECHA_FIN_ATE" jdbcType="DATE"/>
+        <result property="estadoAtencionTicket" column="N_ESTADO_REGISTRO" jdbcType="INTEGER"/>
+        <result property="idVentanilla" column="N_ID_VENTANILLA" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <insert id="ticketInsertar" parameterType="ticket">
+        INSERT INTO 
+            SAC_REG_TICKET
+              ( N_ID_TICKET,
+                N_ID_VISITA,
+                <if test="idPersona != null">
+                N_ID_PERSONA,
+                </if>
+                <if test="idTramite != null">
+                N_ID_TRAMITE,
+                </if>
+                <if test="idSede != null">
+                N_ID_SEDE,
+                </if>
+                <if test="nroTicket != null">
+                C_NRO_TICKET,
+                </if>    
+                N_IND_PREFERENTE,
+                N_ESTADO_TICKET,
+                N_ESTADO_REGISTRO,
+                C_USUARIO_CREA,
+                D_FECHA_CREA)
+          VALUES (
+                SQ_SAC_REG_TICKET.NextVal,
+                #{idVisita},
+                <if test="idPersona != null">
+                #{idPersona},
+                </if>
+                <if test="idTramite != null">
+                #{idTramite},
+                </if>
+                <if test="idSede != null">
+                #{idSede},
+                </if>
+                <if test="nroTicket != null">
+                #{nroTicket},
+                </if>
+                #{atencionPreferente},
+                #{estadoTicket},
+                #{estadoRegistro},
+                #{usuarioCreacion},
+                #{fechaCreacion}       
+            )
+        <selectKey keyProperty="idTicket" resultType="Long">
+            SELECT SQ_SAC_REG_TICKET.CURRVAL FROM DUAL
+        </selectKey>
+    </insert>
+    
+    <select id="obtenerCodigoTicket" parameterType="java.util.HashMap" resultType="String" statementType="CALLABLE">
+      { call sp_generarCodigoTicket( 
+            #{inPreferente,javaType=Integer,jdbcType=INTEGER, mode=IN},
+            #{inSede,javaType=Long,jdbcType=INTEGER, mode=IN},
+            #{outNroTicket,javaType=String,jdbcType=VARCHAR,mode=OUT} ) } 
+    </select>
+    
+    <select id="obtenerTicketAtencion" resultMap="ticketMap" parameterType="filtroTicket">
+        SELECT * FROM (
+            SELECT
+            N_ID_TICKET,
+            N_ID_VISITA,
+            N_ID_PERSONA,
+            C_NRO_TICKET,
+            N_ESTADO_TICKET
+          FROM
+            SAC_REG_TICKET
+          WHERE
+            TRUNC(D_FECHA_CREA)>=TRUNC(SYSDATE) AND
+            N_ESTADO_REGISTRO = #{estadoRegistro} AND
+            N_ESTADO_TICKET = #{estadoTicket} AND
+            N_ID_SEDE = #{idSede}
+            ORDER BY N_IND_PREFERENTE ASC)
+        WHERE ROWNUM = 1
+    </select>
+    
+    <select id="obtenerDatosAtencionTicket" resultMap="atencionTicketMap"  parameterType="long">
+        SELECT T.N_ID_TICKET,T.C_NRO_TICKET,T.N_ESTADO_TICKET,P.N_ID_PERS,
+	P.C_DNI,(P.C_NOMBRE_1 ||' '|| P.C_NOMBRE_1) C_NOMBRES,P.C_APELLIDO_PATERNO,P.C_APELLIDO_MATERNO,
+	V.C_MOTIVO,
+	CASE V.C_MOTIVO 
+	WHEN 'I' THEN 'SOLICITUD DE INTERVENCIÓN'
+	WHEN 'D' THEN 'TRAMITE DOCUMENTARIO'
+	WHEN 'P' THEN 'POSTULACIONES'
+	END AS C_DESC_MOTIVO,
+	V.C_TIPO_ATENCION,
+	CASE V.C_MOTIVO 
+	WHEN 'I' THEN (SELECT UPPER(NOMBRE_PARAMETRO) FROM sid_parametro WHERE padre_parametro=4404 AND VALOR_PARAMETRO=V.C_TIPO_ATENCION)
+	WHEN 'D' THEN (SELECT UPPER(NOMBRE_PARAMETRO) FROM sid_parametro WHERE padre_parametro=4403 AND VALOR_PARAMETRO=V.C_TIPO_ATENCION)
+	END AS C_DESC_ATENCION,
+	V.C_TIPO_TRAMITE,
+	CASE V.C_MOTIVO
+	WHEN 'I' THEN (SELECT UPPER(NOMBRE_PARAMETRO) FROM sid_parametro WHERE padre_parametro=4407 AND VALOR_PARAMETRO=V.C_TIPO_TRAMITE)
+	WHEN 'D' THEN (SELECT UPPER(NOMBRE_PARAMETRO) FROM sid_parametro WHERE padre_parametro IN (4405,4406) AND VALOR_PARAMETRO=V.C_TIPO_TRAMITE)
+	END AS C_DESC_TRAMITE
+	FROM SAC_REG_TICKET T
+	INNER JOIN SAC_REG_PERSONA P ON T.N_ID_PERSONA=P.N_ID_PERS
+	INNER JOIN SAC_REG_VISITA V ON T.N_ID_VISITA=V.N_ID_REG_VISITA
+	WHERE N_ID_TICKET= #{idTicket} AND
+        ROWNUM = 1
+    </select>
+    
+    <select id="actualizarEstadoTicket" parameterType="ticket" statementType="CALLABLE">
+      { call sp_actualizaEstadoTicket (
+            #{idTicket,javaType=Long,jdbcType=INTEGER, mode=IN},
+            #{estadoTicket,javaType=Integer,jdbcType=INTEGER, mode=IN} ) } 
+    </select>
+    
+    <insert id="atencionTicketInsertar" parameterType="atencionTicket">
+        INSERT INTO 
+            SAC_REG_ATENCION_TICKET
+              ( N_ID_DET_TICKET,
+                <if test="idTicket != null">
+                N_ID_TICKET,
+                </if>
+                <if test="codigoUsuarioAtencionTicket != null">
+                CODIGO_USUARIO,
+                </if>
+                <if test="idSede != null">
+                N_ID_SEDE,
+                </if>
+                <if test="fechaInicioAtencionTicket != null">
+                D_FECHA_INI_ATE,
+                </if>
+                <if test="fechaFinAtencionTicket != null">
+                D_FECHA_FIN_ATE,
+                </if>
+                <if test="idVentanilla != null">
+                N_ID_VENTANILLA,
+                </if>
+                N_ESTADO_REGISTRO)
+          VALUES (
+                SQ_SAC_REG_ATENCION_TICKET.NextVal,
+                <if test="idTicket != null">
+                #{idTicket},
+                </if>
+                <if test="codigoUsuarioAtencionTicket != null">
+                #{codigoUsuarioAtencionTicket},
+                </if>
+                <if test="idSede != null">
+                #{idSede},
+                </if>
+                <if test="fechaInicioAtencionTicket != null">
+                #{fechaInicioAtencionTicket},
+                </if>
+                <if test="fechaFinAtencionTicket != null">
+                #{fechaFinAtencionTicket},
+                </if>
+                <if test="idVentanilla != null">
+                #{idVentanilla},
+                </if>
+                #{estadoAtencionTicket}    
+            )
+        <selectKey keyProperty="idAtencionTicket" resultType="Long">
+            SELECT SQ_SAC_REG_ATENCION_TICKET.CURRVAL FROM DUAL
+        </selectKey>
+    </insert>
+    
+    <update id="atencionTicketFechaFinUpdate" parameterType="atencionTicket">
+        UPDATE SAC_REG_ATENCION_TICKET
+        <set>
+            D_FECHA_FIN_ATE = #{fechaFinAtencionTicket}
+        </set>
+        <where>
+            N_ID_DET_TICKET = #{idAtencionTicket}
+        </where>
+    </update>
+</mapper>

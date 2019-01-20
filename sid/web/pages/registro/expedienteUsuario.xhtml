@@ -1,0 +1,472 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+
+    <ui:composition template="../template/template.xhtml">
+        <ui:define name="content">
+            <h:form id="idForm" class="form-horizontal">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h4 class="card-title">Búsqueda</h4>
+                                    </div>
+
+                                    <div class="col-6" style="text-align: right">
+                                        <a class="btn btn-secondary" jsf:action="#{registroController.buscarPersonaGeneral(1)}">
+                                            <span class="fas fa-search" /> Buscar
+                                        </a>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-group row">
+                                    <label for="fname" class="col-sm-3 text-right control-label col-form-label">Documento</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" jsf:value="#{registroController.personaBusqueda.numeroDocumento}" onkeypress="return soloNumbero(event)" autocomplete="off" maxlength="8"  placeholder="Documento"  class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="lname" class="col-sm-3 text-right control-label col-form-label">Apellido Paterno</label>
+                                    <div class="col-sm-9">
+                                        <input jsf:value="#{registroController.personaBusqueda.apellidoPat}" autocomplete="off" maxlength="50" type="text" placeholder="Apellido Paterno"  class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="lname" class="col-sm-3 text-right control-label col-form-label">Apellido Materno</label>
+                                    <div class="col-sm-9">
+                                        <input jsf:value="#{registroController.personaBusqueda.apellidoMat}" autocomplete="off" maxlength="50" type="text" placeholder="Apellido Materno" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="lname" class="col-sm-3 text-right control-label col-form-label">Nombre / Organización</label>
+                                    <div class="col-sm-9">
+                                        <input jsf:value="#{registroController.personaBusqueda.nombre}" autocomplete="off" maxlength="100" type="text" placeholder="Nombre / Organización" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h:panelGroup id="idPanelListaPersonas" rendered="#{registroController.indSeleccion}" style="text-align: left">
+                                    <div class="row">
+                                        <div class="col-12" style="text-align: right">
+                                            <a class="btn btn-secondary" jsf:rendered="#{registroController.indSeleccion}" jsf:action="#{registroController.cargarModalActor()}">
+                                                <span class="fas fa-user" />Nueva Persona
+                                                <f:ajax render=":idForm" onevent="openModalNuevaPersona"/>
+                                            </a>
+                                            <h:panelGroup rendered="#{!seguridadUtilController.tieneRol('ROL0000005') and !seguridadUtilController.tieneRol('ROL0000006')}">
+                                                &#160;&#160;&#160;
+                                                <a class="btn btn-warning" jsf:rendered="#{registroController.indSeleccion}"  jsf:action="#{registroController.irOficio()}">
+                                                    <span class="far fa-folder-open" />Expediente de Oficio
+                                                </a>
+                                            </h:panelGroup>
+
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="table-responsive row">
+                                        <h:dataTable value="#{registroController.listaPersonaGeneral}" var="per" binding="#{row}" class="table table-hover" rendered="#{registroController.listaPersonaGeneral.size() > 0}">
+                                            <h:column>
+                                                <f:facet name="header">Nro</f:facet>
+                                                <h:outputText value="#{row.rowIndex+1+(registroController.nroPaginaPersona -1)*5}" />
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header">Nombre completo</f:facet>
+                                                <h:outputText value="#{per.nombre} #{per.apellidoPat} #{per.apellidoMat}" />
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header">Documento</f:facet>
+                                                <h:outputText value="#{per.numeroDocumento}" />
+                                            </h:column>
+                                            <h:column>
+                                                <a jsf:action="#{registroController.setearPersonaSeleccionada(per)}">
+                                                    <i class="fas fa-share" ></i>
+                                                </a>
+                                            </h:column>
+                                        </h:dataTable>
+                                    </div>
+
+                                    <ul class="pagination">
+                                        <li class="paginate_button page-item previous disabled" id="file_export_previous">
+                                            <a jsf:action="#{registroController.buscarPersonaGeneral(registroController.nroPaginaPersona -1)}" jsf:rendered="#{registroController.listaPersonaGeneral.size()>0}" aria-controls="file_export" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                        </li>
+                                        <li class="paginate_button page-item next" id="file_export_next">
+                                            <a jsf:action="#{registroController.buscarPersonaGeneral(registroController.nroPaginaPersona +1)}" jsf:rendered="#{registroController.listaPersonaGeneral.size()>0}" aria-controls="file_export" data-dt-idx="7" tabindex="0" class="page-link">Siguiente</a>
+                                        </li>
+                                    </ul>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{!registroController.indSeleccion}">
+                                    <div class="row">
+                                        <div class="col-12" >
+
+
+                                            <div class="table-responsive">
+
+                                                <table style="width: 100%">
+                                                    <tr>
+                                                        <td style="width: 35%">
+                                                            <a class="btn btn-warning" jsf:action="#{registroController.retornoListaPersonasSeleccionadas()}">
+                                                                <span class="fas fa-reply" />Regresar
+
+                                                            </a>
+                                                        </td>
+                                                        <td style="text-align: right">
+
+                                                            <h:selectOneMenu value="#{registroController.personaSeleccionada.tipoExpediente}" class="form-control">
+                                                                <f:selectItem itemLabel="Seleccione" itemValue="0" /> 
+                                                                <f:selectItems value="#{listasComunesController.buscarExpedienteTipoClasificacion(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                                            </h:selectOneMenu>
+                                                        </td>
+                                                        <td  style="text-align: right">
+                                                            <h:panelGroup rendered="#{!seguridadUtilController.tieneRol('ROL0000005') and !seguridadUtilController.tieneRol('ROL0000006')}">
+                                                                <a class="btn btn-secondary" jsf:action="#{registroController.iniciarExpedienteNuevo()}" jsf:rendered="#{!registroController.indSeleccion}">
+                                                                    <span class="far fa-share-square"/> Generar Expediente
+                                                                </a>
+                                                            </h:panelGroup>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="table-responsive row">
+                                        <table style="width: 100%; text-align: left" class="table table-hover">
+
+                                            <tr>
+                                                <td><span class="text-bold">Nombre: </span><span >#{registroController.personaSeleccionada.nombre} #{registroController.personaSeleccionada.apellidoPat} #{registroController.personaSeleccionada.apellidoMat}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-bold">Número documento: </span><span>#{registroController.personaSeleccionada.numeroDocumento}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="text-bold">Dirección: </span><span>#{registroController.personaSeleccionada.direccion}</span><br/>
+                                                    <span class="text-bold">Ubigeo: </span><span>#{registroController.personaSeleccionada.nombreDepartamento} / #{registroController.personaSeleccionada.nombreProvincia} / #{registroController.personaSeleccionada.nombreDistrito}</span><br/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-bold">Teléfono: </span><span>#{registroController.personaSeleccionada.telefono1}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-bold">Correo electrónico: </span><span>#{registroController.personaSeleccionada.email}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td jsf:rendered="#{registroController.personaSeleccionada.sexo == 'M'}"><span class="text-bold">Sexo: </span><span>Masculino</span></td>
+                                                <td jsf:rendered="#{registroController.personaSeleccionada.sexo == 'F'}"><span class="text-bold">Sexo: </span><span>Femenino</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-bold">Fecha de nacimiento: </span><span><h:outputText value="#{registroController.personaSeleccionada.fechaNacimiento}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                                        </h:outputText></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-bold">Ultima actualización: </span><span><h:outputText value="#{registroController.personaSeleccionada.fechaModificacion}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                                        </h:outputText></span></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="table-responsive" style="overflow-y: auto; height:450px; ">
+                                        <h:panelGroup rendered="#{registroController.listaExpedienteXPersona.size() > 0}">
+                                            <h4 class="card-title">Historial de expedientes por persona</h4>
+                                            <h:dataTable value="#{registroController.listaExpedienteXPersona}" var="exped" class="table table-hover" binding="#{row4}">
+                                                <h:column>
+                                                    <f:facet name="header">Nro</f:facet>
+                                                    <h:outputText value="#{row4.rowIndex+1}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Expediente</f:facet>
+                                                    <h:outputText value="#{exped.numero}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">OD/MAD</f:facet>
+                                                    <h:outputText value="#{exped.nombreOD}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Comisionado</f:facet>
+                                                    <h:outputText value="#{exped.comisionado}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Tipo</f:facet>
+                                                    <h:outputText value="#{exped.clasificacionTipoNombre}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Fecha Registro</f:facet>
+                                                    <h:outputText value="#{exped.fechaRegistro}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                                    </h:outputText>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Estado</f:facet>
+                                                    <h:outputText value="#{exped.general == 'A'? 'Trámite' : 'Concluido' }" />
+                                                </h:column>
+                                                <h:column>
+                                                    <a jsf:action="#{registroController.cargarExpedienteEdit(exped)}">
+                                                        <i class="fas fa-pencil-alt" ></i>
+                                                    </a>
+                                                </h:column>
+                                            </h:dataTable>
+                                        </h:panelGroup>
+                                    </div>                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function openModalNuevaPersona(data) {
+                        if (data.status === 'success') {
+                            $("#loadModal").modal('hide');
+                            $('body').removeClass('modal-open');
+                            $(".modal-backdrop").removeClass("modal-backdrop");
+                            $("#idModalNuevaPersona").modal('show');
+                        }
+                    }
+                </script>
+                <div id="idModalNuevaPersona" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h4 class="modal-title">Registro de Persona</h4>
+                                    </div>
+                                    <div class="col-6" style="text-align: right">
+                                        <a class="btn btn-danger" data-dismiss="modal">
+                                    <span class="fas fa-times" style="color: white"/> <span style="color: white">Cerrar</span>
+                                </a>&#160;&#160;&#160;
+                                <a jsf:action="#{registroController.guardarVincularPersona()}" class="btn btn-primary">
+                                    <span class="fas fa-save" /> Guardar
+                                </a>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="modal-body">
+                                <h:panelGroup id="idPanelTipoPersona">
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Tipo</label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneRadio value="#{registroController.persona.tipo}">
+                                                <f:selectItem itemLabel="Persona" itemValue="PER"/>
+                                                <f:selectItem itemLabel="Organización" itemValue="ORG"/>
+                                                <f:ajax render="idPanelTipoPersona" execute="idPanelTipoPersona" />
+                                            </h:selectOneRadio>
+                                        </div>
+                                    </div>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Tipo de documento</label>
+                                            <div class="col-sm-8">
+                                                <h:selectOneMenu value="#{registroController.persona.tipoDocumento}" class="form-control">
+                                                    <f:selectItems value="#{listasComunesController.buscarTipoDocumento(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                                </h:selectOneMenu>
+
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Número documento</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" placeholder="Número documento" jsf:value="#{registroController.persona.numeroDocumento}" maxlength="8"  class="form-control"/>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <a class="btn btn-warning" jsf:action="#{registroController.consultarReniec()}">
+                                                    <span class="far fa-share-square" /> Reniec
+                                                    <f:ajax render="idPanelTipoPersona" execute="idPanelTipoPersona"/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Nacionalidad</label>
+                                            <div class="col-sm-8">
+                                                <h:selectOneMenu value="#{registroController.persona.nacionalidad}" class="form-control">
+                                                    <f:selectItem itemLabel="Seleccione" itemValue="0"/>
+                                                    <f:selectItems value="#{listasComunesController.listaListaNacionalidades(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Nombre</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" placeholder="Nombre" jsf:value="#{registroController.persona.nombre}" maxlength="200"  class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'ORG'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Contacto</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" placeholder="Contacto" jsf:value="#{registroController.persona.contacto}" maxlength="50" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Apellido paterno</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" placeholder="Apellido Paterno" jsf:value="#{registroController.persona.apellidoPat}" maxlength="100" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Apellido Materno</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" placeholder="Apellido Materno" jsf:value="#{registroController.persona.apellidoMat}" maxlength="100" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Fecha de nacimiento</label>
+                                            <div class="col-sm-8">
+                                                
+                                                <input type="date" jsf:value="#{registroController.persona.fechaNacimiento}"  placeholder="Fecha"  class="form-control">
+                <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Lima" />
+            </input>
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-4 text-right control-label col-form-label">Sexo</label>
+                                            <div class="col-sm-8">
+                                                <h:selectOneRadio value="#{registroController.persona.sexo}">
+                                                    <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                                                    <f:selectItem itemLabel="Femenino" itemValue="F"/>
+                                                </h:selectOneRadio>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>    
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Dirección</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" placeholder="Dirección" jsf:value="#{registroController.persona.direccion}"  class="form-control" maxlength="300"/><br/>
+                                        </div>
+                                    </div>
+
+                                    <h:panelGroup id="idUbigeoPersona">
+                                        <div class="form-group row">
+
+                                            <div class="col-sm-4">
+                                                <h:selectOneMenu value="#{registroController.persona.idDepartamento}"  class="form-control">
+                                                    <f:selectItem itemLabel="Departamento" itemValue="0"/>
+                                                    <f:selectItems value="#{listasComunesController.listaDepartamentos(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                                    <f:ajax listener="#{registroController.comboProvincia()}" render="cmbProvincia1"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <h:selectOneMenu id="cmbProvincia1" value="#{registroController.persona.idProvincia}"  class="form-control">
+                                                    <f:selectItem itemLabel="Provincia" itemValue="0"/>
+                                                    <f:selectItems value="#{registroController.listaProvincia}" var="y" itemLabel="#{y.value} #{y.label}" itemValue="#{y.id}" />
+                                                    <f:ajax listener="#{registroController.comboDistrito()}" render="cmbDistrito1"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <h:selectOneMenu id="cmbDistrito1" value="#{registroController.persona.idDistrito}"  class="form-control">
+                                                    <f:selectItem itemLabel="Distrito" itemValue="0"/>
+                                                    <f:selectItems value="#{registroController.listaDistrito}" var="y" itemLabel="#{y.value} #{y.label}" itemValue="#{y.id}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup> 
+
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Lengua materna</label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu value="#{registroController.persona.tipoLengua}" class="form-control">
+                                                <f:selectItem itemLabel="Seleccione" itemValue="0"/>
+                                                <f:selectItems value="#{listasComunesController.listaLenguaMaterna(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Población indígena u originarios</label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu value="#{registroController.persona.tipoPueblo}"  class="form-control">
+                                                <f:selectItem itemLabel="Seleccione" itemValue="0"/>
+                                                <f:selectItems value="#{listasComunesController.listaPuebloIndigena(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">¿es persona con discapacidad?</label>
+                                        <div class="col-sm-8">
+                                            <h:selectBooleanCheckbox value="#{registroController.persona.indicadorDiscapacitado}" />
+                                        </div>
+                                    </div>
+                                    </h:panelGroup>
+                                    
+                                    <h:panelGroup rendered="#{registroController.persona.tipo == 'PER'}">
+                                        <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Correo</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" placeholder="Correo electrónico" jsf:value="#{registroController.persona.email}"  class="form-control" maxlength="100"/>
+                                        </div>
+                                    </div>
+                                    </h:panelGroup>
+                                    
+
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Teléfono</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" placeholder="Telefono 1" jsf:value="#{registroController.persona.telefono1}" maxlength="50"  class="form-control" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-4 text-right control-label col-form-label">Lugar de notificación</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" placeholder="Lugar de notificación" jsf:value="#{registroController.persona.direccionNotifica}" maxlength="500"  class="form-control" />
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

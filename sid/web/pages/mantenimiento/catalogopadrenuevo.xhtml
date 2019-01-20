@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+    <ui:composition template="../template/template.xhtml">
+        <ui:define name="content">
+            <h:form id="frm" class="form-horizontal">
+                <h:messages/>
+                <gc:confirmAjax bean="#{catalogoController.insertarCatalogoPadre()}" />
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header header-dark">
+                                <h4 class="card-title"><a href="#">Datos del Parametro</a></h4>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-12" style="text-align: right">
+                                    <a id="idBotonGuardar" class="btn btn-primary" jsf:action="#{catalogoController.insertarCatalogoPadre()}">
+                                            <span class="fa fa-save"/> Guardar
+                                    </a>
+                                    <h:outputText value="&#160;" />
+                                    <button type="submit" jsf:action="catalogoPadreList" class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-share"/>Regresar
+                                    </button> 
+                                </div>
+                            </div>
+                        
+                        
+                            <div class="card-body">
+                                <div class="form-group">
+                                        <label class="col-sm-12 text-left control-label col-form-label">Codigo:</label>
+                                        <div class="col-sm-15">
+                                            <input type="text" placeholder="codigo" jsf:value="#{catalogoController.catalogoPadre.numParametro}" class="form-control"  autocomplete="off"/>
+                                            <input type="hidden" id="idNumerParametro" value="#{catalogoController.catalogoPadre.numParametro}" />
+                                        </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                        <label  class="col-sm-12 text-left control-label col-form-label">Nombre:</label>
+                                        <div class="col-sm-15">
+                                            <input type="text" placeholder="nombre" jsf:value="#{catalogoController.catalogoPadre.nombreParametro}" class="form-control"  autocomplete="off"/>
+                                        </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" id="chkHabilitado" value="#{catalogoController.habilitado}" checked="checked"/> Activo
+                                            </label>
+                                        </div>                                        
+                                </div>
+                            </div>
+                
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    $("#idBotonGuardar").click(function () {
+                        if($("#idNumerParametro").val() === ""){
+                            if ($('#idTxtNombreParametro').val() === "") {
+                                $('#idTxtNombreParametro').addClass('error');
+                                alertar("Debe de ingresar el nombre del parametro");
+                                return false;
+                            }
+                            else {
+                                $('#idTxtNombreParametro').removeClass('error');
+                            }
+                            confirmar();
+                        }else{
+                            alertar("El paramentro ya existe vuelva al menu principal");
+                        } 
+                    });
+
+                </script>
+                   
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>  

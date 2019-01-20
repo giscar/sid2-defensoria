@@ -1,0 +1,148 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+
+    <ui:composition template="../template/template.xhtml">
+
+        <ui:define name="content">            
+            <h:form id="idForm" class="form-horizontal">
+                
+                <div class="email-app">
+                    <!-- ============================================================== -->
+                    <!-- Left Part -->
+                    <!-- ============================================================== -->
+                    <div class="left-part">
+                        <a href="mail_compose.html" class="btn btn-block btn-primary compose-mail">Nuevo</a>
+                        <a class="ti-menu ti-close btn btn-success show-left-part d-block d-md-none" href="javascript:void(0)"></a>
+                        
+                        <div class="scrollable" style="height:100%;">                            
+                            <div class="divider"></div>
+                            <ul class="list-group">
+                                <li>
+                                    <small class="p-15 grey-text text-lighten-1 db">Opciones</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <a jsf:action="#{bandejaController.cargarTotalInternos(1)}" class="active list-group-item-action"><i class="mdi mdi-inbox"></i>Alertas Internas <span class="label label-success float-right">#{bandejaController.nroMensajesInternos}</span></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a jsf:action="#{bandejaController.cargarTotalAutomaticos(1)}" class="list-group-item-action"> <i class="mdi mdi-star"></i> Alertas Automaticas <span class="label label-success float-right">#{bandejaController.nroMensajesAutomaticos}</span></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a jsf:action="#{bandejaController.cargarTotalProgramados(1)}" class="list-group-item-action"> <i class="mdi mdi-send"></i> Alertas Programadas <span class="label label-danger float-right">#{bandejaController.nroMensajesProgramados}</span></a>
+                                </li>                               
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- Right Part -->
+                    <!-- ============================================================== -->
+                    <div class="right-part mail-list bg-white">
+                        <div class="p-15 b-b" style="padding: 15px">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h4>Bandeja</h4>
+                                    <span>Listado de Alertas</span>
+                                </div>
+                                <div class="ml-auto">
+                                    <input placeholder="buscar" id="" type="text" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Action part -->                        
+                        <!-- Button group part -->
+                        <div class="bg-light p-15 d-flex align-items-center do-block" style="padding: 15px">
+                            <div class="btn-group m-t-5 m-b-5">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input sl-all" id="cstall"/>
+                                    <label class="custom-control-label" for="cstall">Seleccionar todo</label>
+                                </div>
+                            </div>
+                            <div class="ml-auto">
+                                <div class="btn-group m-r-10" role="group" aria-label="Button group with nested dropdown">
+                                    <button type="button" class="btn btn-outline-secondary font-18" onclick="window.location.reload();"><i class="mdi mdi-reload"></i></button>
+                                    <button type="button" class="btn btn-outline-secondary font-18" ><i class="mdi mdi-delete"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mail list-->
+                        <div class="table-responsive">
+                            <table class="table email-table no-wrap table-hover v-middle">
+                                <tbody>
+                                    <c:forEach var="x" items="#{bandejaController.listaMensajes}">
+                                        <!-- row -->
+                                        <tr class="unread" >
+
+                                            <td class="chb">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="#{x}" value="#{x.indicador}" />
+                                                    <label class="custom-control-label" for="#{x}"> </label>
+                                                </div>
+                                            </td>
+                                            <td style="width: 350px;">                                                
+                                                <a jsf:action="#{bandejaController.verMensajeBandeja(x)}" style="color: #{x.estado == 'VIS'? '#787878' : 'red'} ; font-weight:  #{x.estado == 'VIS'? '' : 'bold'}">
+                                                    <span>#{x.nombreRemitente}</span>
+                                                </a>                                                
+                                            </td>                                            
+                                            <td class="max-texts">
+                                                <span class="label" style="color: white; background-color: #{x.colorTipo}">
+                                                    <span>#{x.detalleTipo}</span>
+                                                </span>
+                                            </td>
+                                            <td class="max-texts">
+                                                <a jsf:action="#{bandejaController.verMensajeBandeja(x)}" style="color: #{x.estado == 'VIS'? '#787878' : 'red'} ; font-weight:  #{x.estado == 'VIS'? '' : 'bold'}">
+                                                    #{x.numeroExpediente}
+                                                </a>
+                                            </td>
+                                            <td class="text-right mail-date">
+                                                <h:outputText value="#{x.fechaEnvio}" >
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                                </h:outputText>
+                                            </td>
+                                        </tr>   
+                                     </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-15 m-t-30">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <!-- Pag Listado Alertas Internos -->
+                                    <li class="paginate_button page-item previous" id="file_export_previous">
+                                    <a jsf:action="#{bandejaController.cargarTotalInternos(bandejaController.nroPaginaAutomatica -1)}" jsf:rendered="#{bandejaController.indicadorBandeja == 3}"
+                                       aria-controls="file_export" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                    </li>
+                                    <li class="paginate_button page-item next" id="file_export_next">
+                                    <a jsf:action="#{bandejaController.cargarTotalInternos(bandejaController.nroPaginaAutomatica +1)}" jsf:rendered="#{bandejaController.indicadorBandeja == 3}"
+                                       aria-controls="file_export" data-dt-idx="7" tabindex="0" class="page-link">Siguiente</a>
+                                    </li>
+                                    <!-- Pag Listado Alertas Automaticos -->    
+                                    <li class="paginate_button page-item previous" id="file_export_previous">
+                                    <a jsf:action="#{bandejaController.cargarTotalAutomaticos(bandejaController.nroPaginaAutomatica -1)}" jsf:rendered="#{bandejaController.indicadorBandeja == 1}"
+                                       aria-controls="file_export" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                    </li>
+                                    <li class="paginate_button page-item next" id="file_export_next">
+                                    <a jsf:action="#{bandejaController.cargarTotalAutomaticos(bandejaController.nroPaginaAutomatica +1)}" jsf:rendered="#{bandejaController.indicadorBandeja == 1}"
+                                       aria-controls="file_export" data-dt-idx="7" tabindex="0" class="page-link">Siguiente</a>
+                                    </li>
+                                    <!-- Pag Listado Alertas Programas -->        
+                                    <li class="paginate_button page-item previous" id="file_export_previous">
+                                    <a jsf:action="#{bandejaController.cargarTotalProgramados(bandejaController.nroPaginaAutomatica -1)}" jsf:rendered="#{bandejaController.indicadorBandeja == 2}"
+                                       aria-controls="file_export" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                    </li>
+                                    <li class="paginate_button page-item next" id="file_export_next">
+                                    <a jsf:action="#{bandejaController.cargarTotalProgramados(bandejaController.nroPaginaAutomatica +1)}" jsf:rendered="#{bandejaController.indicadorBandeja == 2}"
+                                       aria-controls="file_export" data-dt-idx="7" tabindex="0" class="page-link">Siguiente</a>
+                                    </li>                                       
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>                                 
+                </div>
+            </h:form>
+       </ui:define>
+    </ui:composition>
+</html>

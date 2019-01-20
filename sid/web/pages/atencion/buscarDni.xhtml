@@ -1,0 +1,141 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+    <link rel="stylesheet" type="text/css" href="../../assets/extra-libs/jquery.kaypad/css/jquery.keypad.css" />
+    
+    <script type="text/javascript" src="../../assets/extra-libs/jquery.kaypad/js/jquery.plugin.js"></script>
+    <script type="text/javascript" src="../../assets/extra-libs/jquery.kaypad/js/jquery.keypad.js"></script>
+    <script>
+        $(function () {
+            $('#campo').keypad({keypadOnly: false});
+        });        
+    </script>
+            <h:form id="idFormBuscarDni" class="form-horizontal">
+                <div class="row" style="center">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header header-dark">
+                                <h4 class="card-title"><a href="#">Resumen de Atención</a></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="inputname" class="control-label col-form-label">DNI</label>
+                                            <input id="campo" type="text" class="dni form-control" jsf:value="#{atencionController.atencion.dni}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="inputname" class="control-label col-form-label">&#160;</label><br/>
+                                                <a class="btn btn-warning" jsf:action="#{atencionController.accederBuscarDni()}">
+                                                    <i class="fa fa-save"></i> Buscar
+                                                </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label jsf:rendered="#{atencionController.message != null}" class="label label-success col-12"><h5> <h:outputLabel value="#{atencionController.message}" /> </h5></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"><a href="#">Datos de la persona</a></h4>
+                            </div>
+                            <div class="card-body">
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="inputname" class="control-label col-form-label"><strong>DNI</strong></label>
+                                            <input type="text" class="dni form-control" jsf:value="#{atencionController.atencion.dni}" placeholder="DNI" disabled="true"/>
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="inputname" class="control-label col-form-label"><strong>NOMBRES</strong></label>
+                                            <input type="text" class="nombres form-control" jsf:value="#{atencionController.atencion.nombres}" disabled="#{atencionController.disableField}" placeholder="Nombres"/>
+                                        </div>
+                                    </div>    
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="inputEmail3" class="control-label col-form-label"><strong>PATERNO</strong></label>
+                                            <input type="text" class="apellidoPaterno form-control" jsf:value="#{atencionController.atencion.apellidoPaterno}" disabled="#{atencionController.disableField}" placeholder="Apellido Paterno"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4">
+                                        <div class="form-group">
+                                            <label for="inputcontact" class="control-label col-form-label"><strong>MATERNO</strong></label>
+                                            <input type="text" class="apellidoMaterno form-control" value="#{atencionController.atencion.apellidoMaterno}"  disabled="#{atencionController.disableField}" placeholder="Apellido Materno"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <div class="form-group">
+                                            <label for="inputcontact" class="control-label col-form-label"><strong>FEC. NAC.</strong></label>
+                                            <input type="text" class="apellidoMaterno form-control" value="#{atencionController.atencion.fechaNacimiento}"  disabled="#{atencionController.disableField}" placeholder="Fecha Nacimiento"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <div class="form-group">
+                                            <label for="inputcontact" class="control-label col-form-label"><strong>SEXO</strong></label>
+                                            <input type="text" class="apellidoMaterno form-control" value="#{atencionController.atencion.sexo}"  disabled="#{atencionController.disableField}" placeholder="Sexo"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <div class="form-group">
+                                            <label for="inputcontact" class="control-label col-form-label"><strong>DISCAPACIDAD</strong></label>
+                                            <input type="text" class="apellidoMaterno form-control" value="#{atencionController.atencion.discapacidad}"  disabled="#{atencionController.disableField}" placeholder="Discapacidad"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
+                                    <h:panelGroup id="idpaneldiscapacidad" layout="block" >
+                                        <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="inputcontact" class="control-label col-form-label"><strong>Atención Preferencial</strong></label>
+                                            <h:selectOneRadio class="sexo" value="#{atencionController.atencion.atencionPreferencial}">
+                                                <f:selectItem itemLabel="Si" itemValue="S"/>
+                                                <f:selectItem itemLabel="No" itemValue="N"/>
+                                                <f:ajax render="idpaneldiscapacidad" />
+                                            </h:selectOneRadio>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                            <div class="form-group">
+                                                <label jsf:rendered="#{atencionController.atencion.atencionPreferencial == 'S'}" for="inputEmail3" class="control-label col-form-label"><strong>Tipo de Discapacidad </strong></label>
+                                                <h:selectOneMenu class="document form-control" value="#{atencionController.atencion.tipoDiscapacidad}" rendered="#{atencionController.atencion.atencionPreferencial == 'S'}"   >
+                                                    <f:selectItem itemValue="0" itemLabel="Selecione" />
+                                                    <f:selectItems value="#{listasComunesController.buscarTipoDiscapacidad(false,false,false)}" var="y" itemLabel="#{y.nombreParametro}" itemValue="#{y.valorParametro}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                    </div>
+                                            </div>
+                                  </h:panelGroup>
+                                
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-8">
+                                        <div class="form-group">
+                                            <label for="inputcontact" class="control-label col-form-label">Observaciones</label>
+                                            <h:inputTextarea value="#{atencionController.atencion.observaciones}" class="document form-control" id="observaciones" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>                    
+                </div>                    
+            </h:form>
+</html>

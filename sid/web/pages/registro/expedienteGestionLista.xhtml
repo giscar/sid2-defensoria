@@ -1,0 +1,531 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+
+    <ui:composition template="../template/templateCabeceraExpediente.xhtml">
+        <ui:define name="content2">
+          <h:messages />
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item"> 
+                    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home5" role="tab" aria-controls="home5" aria-expanded="true" jsf:action="#{registroController.datosGeneralesExpediente()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-home"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Datos generales</span>
+                    </a> 
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" jsf:rendered="#{registroController.etapaEstado.idEtapa > 0}" jsf:action="#{registroController.cargarExpedienteGestionLista()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Gestiones externas</span>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" jsf:rendered="#{registroController.etapaEstado.idEtapa > 0}" jsf:action="#{registroController.inicioAcciones()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Gestiones internas</span>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" jsf:action="#{registroController.cargarHistorial()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Historial</span>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile"  jsf:rendered="#{registroController.etapaEstado.idEtapa > 0}" jsf:action="#{registroController.cargarCompartir()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Compartir</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content tabcontent-border p-20" id="myTabContent">
+                <div role="tabpanel" class="tab-pane fade show active" id="home5" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12" style="text-align: right">
+                                            <a class="btn btn-primary" jsf:rendered="#{registroController.etapaEstado.verEtapa > 1 and registroController.etapaEstado.verEtapa != 5 and registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo and registroController.expediente.general != 'C'}" jsf:action="#{registroController.cargarExpedienteGestion()}">
+                                        <span class="far fa-list-alt" /> Nueva Gestión
+                                    </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table style="width:100%">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="padding-bottom: 15px; float: right">
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                        <h:panelGroup rendered="#{registroController.expediente.tipoClasificion == '01'}">
+                            <table style="width:100%">    
+                                <tr>
+                                    <td>
+                                        <span class="fas fa-folder-open" style="font-size:medium"></span>
+                                        <span class="text-resalt-comun">&#160;&#160;Investigación&#160;(#{registroController.listaExpedientesInvestigacionQueja.size()})</span>
+                                        <a id="addInvestigacion">
+                                            <span id="spanAddInvestigacion" class="fas fa-plus" style="font-size:medium;cursor:pointer"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="fas fa-folder-open" style="font-size:medium"></span>
+                                        <span class="text-resalt-comun">&#160;&#160;Persuasión&#160;(#{registroController.listaExpedientesPersuacionQueja.size()})</span>
+                                        <a id="addPersuacion">
+                                            <span id="spanAddPersuacion" class="fas fa-plus" style="font-size:medium;cursor:pointer"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="fas fa-folder-open" style="font-size:medium"></span>
+                                        <span class="text-resalt-comun">&#160;&#160;Seguimiento&#160;(#{registroController.listaExpedientesSeguimientoQueja.size()})</span>
+                                        <a id="addSeguimiento">
+                                            <span id="spanAddSeguimiento" class="fas fa-plus" style="font-size:medium;cursor:pointer"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{registroController.expediente.tipoClasificion == '03'}">
+                            <table style="width:100%">    
+                                <tr>
+                                    <td>
+                                        <span class="fas fa-folder-open" style="font-size:medium"></span>
+                                        <span class="text-resalt-comun">&#160;&#160;Gestión&#160;(#{registroController.listaExpedientesGestionPetitorio.size()})</span>
+                                        <a id="addInvestigacion">
+                                            <span id="spanAddInvestigacion" class="fas fa-plus" style="font-size:medium;cursor:pointer"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="fas fa-folder-open" style="font-size:medium"></span>
+                                        <span class="text-resalt-comun">&#160;&#160;Persuasión&#160;(#{registroController.listaExpedientesPersuacionPetitorio.size()})</span>
+                                        <a id="addPersuacion">
+                                            <span id="spanAddPersuacion" class="fas fa-plus" style="font-size:medium;cursor:pointer"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </h:panelGroup>
+                        <br/>
+                        <br/>
+                        <h:panelGroup rendered="#{registroController.expediente.tipoClasificion == '01'}">
+                            
+                            <div id="idPanelBodyInvestigacion">
+                                <div>
+                                    <h4 class="card-title">Gestiones registradas en la etapa de Investigación:</h4>
+                                </div>
+                                <div  class="table-responsive">
+                                    <h:dataTable value="#{registroController.listaExpedientesInvestigacionQueja}" var="investigacion" binding="#{rowx2}" class="table table-hover">
+                                        <h:column>
+                                            <f:facet name="header">N°</f:facet>
+                                            <h:outputText value="#{rowx2.rowIndex+1}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Codigo de gestión</f:facet>
+                                            <h:outputText value="#{investigacion.codigoGestion}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Tipo de acción</f:facet>
+                                            <h:outputText value="#{investigacion.detalleTipo}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha registro</f:facet>
+                                            <h:outputText value="#{investigacion.fechaRegistro}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha modificación</f:facet>
+                                            <h:outputText value="#{investigacion.fechaModificacion}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Hubo respuesta</f:facet>
+                                            <h:outputText value="#{investigacion.respuesta}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Gestión origen datos generales</f:facet>
+                                            <h:outputText value="#{investigacion.codigoGestionOrigen}" />
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa == 2}">
+                                            <f:facet name="header">Editar</f:facet>
+                                            <a jsf:rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}" jsf:action="#{registroController.setearExpedienteGestion(investigacion)}">
+                                                <span class="fas fa-pencil-alt" />
+                                            </a>
+                                            &#160;&#160;&#160;
+                                            <h:panelGroup rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}">
+                                                <a onclick="confirmar2#{rowx2.rowIndex+1}()" href="#">
+                                                <i class="fas fa-times" style="color: red" ></i>
+                                                    </a>
+                                                    <script>
+                                                        function confirmar2#{rowx2.rowIndex+1}() {
+                                                            $(".confirmacion2#{rowx2.rowIndex+1}").modal('show');
+                                                        }
+                                                    </script>
+                                            <gc:confirmSubmit bean="#{registroController.inactivarGestion(investigacion.id)}" classGC="confirmacion2#{rowx2.rowIndex+1}" mensaje="Esta seguro de eliminar la gestión?" />
+                                                
+                                            </h:panelGroup>
+                                            
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa != 2}">
+                                            <f:facet  name="header">Ver</f:facet>
+                                            <a jsf:action="#{registroController.verExpedienteGestion(investigacion)}">
+                                                <span class="fas fa-search" />
+                                            </a>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                            <div id="idPanelBodyPersuacion">
+                                <div>
+                                    <h4 class="card-title">Gestiones registradas en la etapa de Persuasión:</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <h:dataTable value="#{registroController.listaExpedientesPersuacionQueja}" var="persuacion" binding="#{rowx3}" class="table table-hover">
+                                        <h:column>
+                                            <f:facet name="header">N°</f:facet>
+                                            <h:outputText value="#{rowx3.rowIndex+1}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Codigo de gestión</f:facet>
+                                            <h:outputText value="#{persuacion.codigoGestion}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Tipo de acción</f:facet>
+                                            <h:outputText value="#{persuacion.detalleTipo}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha registro</f:facet>
+                                            <h:outputText value="#{persuacion.fechaRegistro}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha modificación</f:facet>
+                                            <h:outputText value="#{persuacion.fechaModificacion}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Hubo respuesta</f:facet>
+                                            <h:outputText value="#{persuacion.respuesta}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Gestión origen datos generales</f:facet>
+                                            <h:outputText value="#{persuacion.codigoGestionOrigen}" />
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa == 3}">
+                                            <f:facet name="header">Editar</f:facet>
+                                            <a jsf:rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}" jsf:action="#{registroController.setearExpedienteGestion(persuacion)}">
+                                                <span class="fas fa-pencil-alt" />
+                                            </a>
+                                            &#160;&#160;&#160;
+                                            <h:panelGroup rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}">
+                                            <a onclick="confirmar3#{rowx3.rowIndex+1}()" href="#">
+                                                <i class="fas fa-times" style="color: red" ></i>
+                                                    </a>
+                                                    <script>
+                                                        function confirmar3#{rowx3.rowIndex+1}() {
+                                                            $(".confirmacion3#{rowx3.rowIndex+1}").modal('show');
+                                                        }
+                                                    </script>
+                                            <gc:confirmSubmit bean="#{registroController.inactivarGestion(persuacion.id)}" classGC="confirmacion3#{rowx3.rowIndex+1}" mensaje="Esta seguro de eliminar la gestión?" />
+                                             </h:panelGroup>
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa != 3}">
+                                            <f:facet  name="header">Ver</f:facet>
+                                            <a jsf:action="#{registroController.verExpedienteGestion(persuacion)}">
+                                                <span class="fas fa-search" />
+                                            </a>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+
+                            <div id="idPanelBodySeguimiento" >
+                                <div class="panel-heading">
+                                    <h4  class="card-title">Gestiones registradas en la etapa de Seguimiento:</h4>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <h:dataTable value="#{registroController.listaExpedientesSeguimientoQueja}" var="seguimiento" binding="#{rowx4}" class="table table-hover">
+                                        <h:column>
+                                            <f:facet name="header">N°</f:facet>
+                                            <h:outputText value="#{rowx4.rowIndex+1}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Codigo de gestión</f:facet>
+                                            <h:outputText value="#{seguimiento.codigoGestion}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Tipo de acción</f:facet>
+                                            <h:outputText value="#{seguimiento.detalleTipo}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha registro</f:facet>
+                                            <h:outputText value="#{seguimiento.fechaRegistro}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha modificación</f:facet>
+                                            <h:outputText value="#{seguimiento.fechaModificacion}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Hubo respuesta</f:facet>
+                                            <h:outputText value="#{seguimiento.respuesta}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Gestión origen datos generales</f:facet>
+                                            <h:outputText value="#{seguimiento.codigoGestionOrigen}" />
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa == 4}">
+                                            <f:facet name="header">Editar</f:facet>
+                                            <a jsf:rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}" jsf:action="#{registroController.setearExpedienteGestion(seguimiento)}">
+                                                <span class="fas fa-pencil-alt" />
+                                            </a>
+                                            &#160;&#160;&#160;
+                                            <h:panelGroup rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}">
+                                            
+                                            <a onclick="confirmar4#{rowx4.rowIndex+1}()" href="#">
+                                                <i class="fas fa-times" style="color: red" ></i>
+                                                    </a>
+                                                    <script>
+                                                        function confirmar4#{rowx4.rowIndex+1}() {
+                                                            $(".confirmacion4#{rowx4.rowIndex+1}").modal('show');
+                                                        }
+                                                    </script>
+                                            <gc:confirmSubmit bean="#{registroController.inactivarGestion(seguimiento.id)}" classGC="confirmacion4#{rowx4.rowIndex+1}" mensaje="Esta seguro de eliminar la gestión?" />
+                                             </h:panelGroup>
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa != 4}">
+                                            <f:facet  name="header">Ver</f:facet>
+                                            <a jsf:action="#{registroController.verExpedienteGestion(seguimiento)}">
+                                                <span class="fas fa-search" />
+                                            </a>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{registroController.expediente.tipoClasificion == '03'}">
+                            <div id="idPanelBodyInvestigacion">
+                                <div>
+                                   <h4  class="card-title">Gestiones registradas en la etapa de Gestión:</h4>
+                                </div>
+                                <div  class="table-responsive">
+                                    <h:dataTable value="#{registroController.listaExpedientesGestionPetitorio}" var="gestion" binding="#{rowx6}" class="table table-hover">
+                                        <h:column>
+                                            <f:facet name="header">N°</f:facet>
+                                            <h:outputText value="#{rowx6.rowIndex+1}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Codigo de gestión</f:facet>
+                                            <h:outputText value="#{gestion.codigoGestion}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Tipo de acción</f:facet>
+                                            <h:outputText value="#{gestion.detalleTipo}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha registro</f:facet>
+                                            <h:outputText value="#{gestion.fechaRegistro}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha modificación</f:facet>
+                                            <h:outputText value="#{gestion.fechaModificacion}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Hubo respuesta</f:facet>
+                                            <h:outputText value="#{gestion.respuesta}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Gestión origen datos generales</f:facet>
+                                            <h:outputText value="#{gestion.codigoGestionOrigen}" />
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa == 6}">
+                                            <f:facet name="header">Editar</f:facet>
+                                            <a jsf:action="#{registroController.setearExpedienteGestion(gestion)}">
+                                                <span class="fas fa-pencil-alt" />
+                                            </a>
+                                            &#160;&#160;&#160;
+                                            <h:panelGroup rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}">
+                                            
+                                            <a onclick="confirmar6#{rowx6.rowIndex+1}()" href="#">
+                                                <i class="fas fa-times" style="color: red" ></i>
+                                                    </a>
+                                                    <script>
+                                                        function confirmar6#{rowx6.rowIndex+1}() {
+                                                            $(".confirmacion6#{rowx6.rowIndex+1}").modal('show');
+                                                        }
+                                                    </script>
+                                            <gc:confirmSubmit bean="#{registroController.inactivarGestion(gestion.id)}" classGC="confirmacion6#{rowx6.rowIndex+1}" mensaje="Esta seguro de eliminar la gestión?" />
+                                             </h:panelGroup>
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa != 6}">
+                                            <f:facet  name="header">Ver</f:facet>
+                                            <a jsf:action="#{registroController.verExpedienteGestion(gestion)}">
+                                                <span class="fas fa-search" />
+                                            </a>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                            <div id="idPanelBodyPersuacion">
+                                <div>
+                                    <h4 class="card-title">Gestiones registradas en la etapa de Persuasión:</h4>
+                                </div>
+                                <div  class="table-responsive">
+                                    <h:dataTable value="#{registroController.listaExpedientesPersuacionPetitorio}" var="persuacion" binding="#{rowx7}" class="table table-hover">
+                                        <h:column>
+                                            <f:facet name="header">N°</f:facet>
+                                            <h:outputText value="#{rowx7.rowIndex+1}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Codigo de gestión</f:facet>
+                                            <h:outputText value="#{persuacion.codigoGestion}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Tipo de acción</f:facet>
+                                            <h:outputText value="#{persuacion.detalleTipo}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha registro</f:facet>
+                                            <h:outputText value="#{persuacion.fechaRegistro}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Fecha modificación</f:facet>
+                                            <h:outputText value="#{persuacion.fechaModificacion}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Hubo respuesta</f:facet>
+                                            <h:outputText value="#{persuacion.respuesta}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Gestión origen datos generales</f:facet>
+                                            <h:outputText value="#{persuacion.codigoGestionOrigen}" />
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa == 7}">
+                                            <f:facet name="header">Editar</f:facet>
+                                            <a jsf:action="#{registroController.setearExpedienteGestion(persuacion)}">
+                                                <span class="fas fa-pencil-alt" />
+                                            </a>    
+                                            &#160;&#160;&#160;
+                                            <h:panelGroup rendered="#{registroController.expediente.usuarioRegistro == registroController.usuarioSession.codigo}">
+                                            
+                                                <a onclick="confirmar7#{rowx7.rowIndex+1}()" href="#">
+                                                    <i class="fas fa-times" style="color: red" ></i>
+                                                    </a>
+                                                
+                                                    <script>
+                                                        function confirmar7#{rowx7.rowIndex+1}() {
+                                                            $(".confirmacion7#{rowx7.rowIndex+1}").modal('show');
+                                                        }
+                                                    </script>
+                                            <gc:confirmSubmit bean="#{registroController.inactivarGestion(persuacion.id)}" classGC="confirmacion7#{rowx7.rowIndex+1}" mensaje="Esta seguro de eliminar la gestión?" />
+                                             </h:panelGroup>
+                                            
+                                        </h:column>
+                                        <h:column rendered="#{registroController.etapaEstado.verEtapa != 7}">
+                                            <f:facet  name="header">Ver</f:facet>
+                                            <a jsf:action="#{registroController.verExpedienteGestion(persuacion)}">
+                                                <span class="fas fa-search" />
+                                            </a>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                        <script>
+                            $("#idPanelBodyCalificacion").hide();
+                            $("#addCalificacion").click(function () {
+                                if ($("#spanAddCalificacion").attr('class') === "fas fa-plus")
+                                {
+                                    $("#idPanelBodyCalificacion").slideDown(400).delay(800);
+                                    $("#spanAddCalificacion").removeClass("fa-plus").addClass("fa-minus");
+                                }
+                                else
+                                {
+                                    $("#idPanelBodyCalificacion").slideUp(300).delay(800);
+                                    $("#spanAddCalificacion").removeClass("fa-minus").addClass("fa-plus");
+                                }
+                            });
+                            $("#idPanelBodyInvestigacion").hide();
+                            $("#addInvestigacion").click(function () {
+                                if ($("#spanAddInvestigacion").attr('class') === "fas fa-plus")
+                                {
+                                    $("#idPanelBodyInvestigacion").slideDown(400).delay(800);
+                                    $("#spanAddInvestigacion").removeClass("fa-plus").addClass("fa-minus");
+                                }
+                                else
+                                {
+                                    $("#idPanelBodyInvestigacion").slideUp(300).delay(800);
+                                    $("#spanAddInvestigacion").removeClass("fa-minus").addClass("fa-plus");
+                                }
+                            });
+                            $("#idPanelBodyPersuacion").hide();
+                            $("#addPersuacion").click(function () {
+                                if ($("#spanAddPersuacion").attr('class') === "fas fa-plus")
+                                {
+                                    $("#idPanelBodyPersuacion").slideDown(400).delay(800);
+                                    $("#spanAddPersuacion").removeClass("fa-plus").addClass("fa-minus");
+                                }
+                                else
+                                {
+                                    $("#idPanelBodyPersuacion").slideUp(300).delay(800);
+                                    $("#spanAddPersuacion").removeClass("fa-minus").addClass("fa-plus");
+                                }
+                            });
+                            $("#idPanelBodySeguimiento").hide();
+                            $("#addSeguimiento").click(function () {
+                                if ($("#spanAddSeguimiento").attr('class') === "fas fa-plus")
+                                {
+                                    $("#idPanelBodySeguimiento").slideDown(400).delay(800);
+                                    $("#spanAddSeguimiento").removeClass("fa-plus").addClass("fa-minus");
+                                }
+                                else
+                                {
+                                    $("#idPanelBodySeguimiento").slideUp(300).delay(800);
+                                    $("#spanAddSeguimiento").removeClass("fa-minus").addClass("fa-plus");
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>

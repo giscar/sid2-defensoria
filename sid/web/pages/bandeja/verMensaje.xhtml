@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:composition template="../template/template.xhtml">
+
+        <ui:define name="content">
+            <h:form id="idForm" class="form-horizontal">
+                
+                <div class="email-app">
+                    <!-- ============================================================== -->
+                    <!-- Left Part -->
+                    <!-- ============================================================== -->
+                    <div class="left-part">
+                        <a href="mail_compose.html" class="btn btn-block btn-primary compose-mail">Nuevo</a>
+                        <a class="ti-menu ti-close btn btn-success show-left-part d-block d-md-none" href="javascript:void(0)"></a>
+                        
+                        <div class="scrollable" style="height:100%;">                            
+                            <div class="divider"></div>
+                            <ul class="list-group">
+                                <li>
+                                    <small class="p-15 grey-text text-lighten-1 db">Opciones</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <a jsf:action="#{bandejaController.cargarTotalInternos(1)}" class="active list-group-item-action"><i class="mdi mdi-inbox"></i>Alertas Internas <span class="label label-success float-right">#{bandejaController.nroMensajesInternos}</span></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a jsf:action="#{bandejaController.cargarTotalAutomaticos(1)}" class="list-group-item-action"> <i class="mdi mdi-star"></i> Alertas Automaticas <span class="label label-success float-right">#{bandejaController.nroMensajesAutomaticos}</span></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a jsf:action="#{bandejaController.cargarTotalProgramados(1)}" class="list-group-item-action"> <i class="mdi mdi-send"></i> Alertas Programadas <span class="label label-danger float-right">#{bandejaController.nroMensajesProgramados}</span></a>
+                                </li>                               
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- Right Part -->
+                    <!-- ============================================================== -->
+                    <div class="right-part mail-list bg-white">
+                        <div class="card-body bg-light">
+                            <div class="btn-group m-r-10" role="group" aria-label="Button group with nested dropdown">
+                                <button type="button" class="btn btn-outline-secondary font-18" onclick="window.history.back();"><i class="mdi mdi-reply"></i></button>
+                                <button type="button" class="btn btn-outline-secondary font-18"><i class="mdi mdi-alert-octagon"></i></button>
+                                <button type="button" class="btn btn-outline-secondary font-18"><i class="mdi mdi-delete"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body border-bottom">
+                            <h4 class="m-b-0">#{bandejaController.mensajeBandeja.tituloMensaje}</h4>
+                        </div>
+                        <!-- Action part -->                        
+                        <!-- Action part -->
+                        <!-- Mail list-->
+                        <div class="table-responsive">
+                            <div class="panel panel-default" style="font-size: 14px; padding: 10px">
+                            <h4 class="m-b-15">Detalle:</h4>
+                            <p style="color: #767778; text-align: justify">
+                                 #{bandejaController.mensajeBandeja.motivo}</p>
+                            <h4 class="m-b-15">Remitente:</h4>
+                            <p style="color: #767778; text-align: justify">
+                                #{bandejaController.mensajeBandeja.nombreRemitente}</p>
+                            <br/><br/>
+                            
+                            <h:panelGroup rendered="#{bandejaController.mensajeBandeja.tipo == 1}">
+                            <span style="font-weight: bold; font-size: 1em; color: #007ACC"></span>
+                            <a class="btn btn-info" title="ir al expediente" jsf:action="#{bandejaController.cargarExpedientePorDeriva()}">Ir al expediente</a>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{bandejaController.mensajeBandeja.tipo == 2}">
+                            <span style="font-weight: bold; font-size: 1em; color: #007ACC"></span>
+                            <a  class="btn btn-info" title="ir al expediente" jsf:action="#{bandejaController.cargarExpedientePorMensa()}">Ir al expediente</a>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{bandejaController.mensajeBandeja.tipo == 3}">
+                            <span style="font-weight: bold; font-size: 1em; color: #007ACC"></span>
+                            <a  class="btn btn-info" title="ir al expediente" jsf:action="#{bandejaController.cargarExpedientePorSuspencion()}">Ir al expediente</a>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{bandejaController.mensajeBandeja.tipo == 4}">
+                            <span style="font-weight: bold; font-size: 1em; color: #007ACC"></span>
+                            <a  class="btn btn-info" title="ir al expediente" jsf:action="#{bandejaController.cargarExpedientePorAmpliacion()}">Ir al expediente</a>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{bandejaController.mensajeBandeja.tipo == 6}">
+                            <span style="font-weight: bold; font-size: 1em; color: #007ACC"></span>
+                            <a  class="btn btn-info" title="ir al expediente" jsf:action="#{registroController.cargarExpedientePorNumero(bandejaController.mensajeBandeja.numeroExpediente)}">Ir al expediente</a>
+                            </h:panelGroup>
+                        </div>
+                        </div>
+                    </div>                                 
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+
+    <composite:interface>
+        <composite:attribute name="value" required="true"/>
+        <composite:attribute name="id" required="false"/>
+        <composite:attribute name="idDiv" required="false"/>
+        <composite:attribute name="clase" default="form-control"/>
+    </composite:interface>
+
+    <composite:implementation>
+        <script src="/sid/faces/dist/js/pages/forms/datetimepicker/datetimepicker.init.js"></script>
+        
+        <div class="input-group" id="#{cc.attrs.idDiv}">
+            <input type='text'  data-format="dd/MM/yyyy" jsf:value="#{cc.attrs.value}"  placeholder="Fecha" id="#{cc.attrs.id}" class="form-control pickadate-translations #{cc.attrs.clase}">
+                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Lima" />
+            </input>
+            <div class="input-group-append">
+                <span class="input-group-text">
+                    <span class="ti-calendar"></span>
+                </span>
+            </div>
+        </div>
+
+        
+    </composite:implementation>
+</html>            

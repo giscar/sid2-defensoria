@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:composite="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <composite:interface>
+        <composite:attribute name="bean" required="true" method-signature="void action(java.lang.String)"/>
+        <composite:attribute name="mensaje" default="Está seguro que desea realizar los cambios ?"/>
+        <composite:attribute name="classGC" default="confirmacion"/>
+    </composite:interface>
+
+    <composite:implementation>
+        <div class="modal fade #{cc.attrs.classGC}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;" >
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Confirmación</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row form-group">
+                                                    <div class="col-2">
+                                                        <img src="../../bootstrap/img/warning.png" style="width: 30px"/>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h:outputLabel style="text-justify: distribute" value="#{cc.attrs.mensaje}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                
+                                                <a class="btn btn-info" data-dismiss="modal" jsf:action="#{cc.attrs.bean}">
+                                                    <span class="fa fa-check"/> Aceptar
+                                                </a>
+                                                <a class="btn btn-danger" data-dismiss="modal">
+                                                    <span class="fas fa-times" style="color: white"/> <span style="color: white">Cancelar</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    </composite:implementation>
+</html>            

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD iBatis Mapper 3.0 //EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="gob.dp.sid.atencion.dao.DocumentoDAO">
+    <resultMap id="documentoMap" type="gob.dp.sid.atencion.entity.Documento">
+        <result property="id" column="N_ID_DOC" jdbcType="INTEGER"/>
+        <result property="codDocumento" column="C_COD_DOC" jdbcType="VARCHAR"/>
+        <result property="extensionDoc" column="C_EXT_DOC" jdbcType="VARCHAR"/>
+        <result property="tamanioDoc" column="C_TAMANIO_DOC" jdbcType="VARCHAR"/>
+        <result property="estado" column="N_ESTADO" jdbcType="VARCHAR"/>
+        <result property="rutaDoc" column="C_RUTA_DOC" jdbcType="VARCHAR"/>
+        <result property="anexo" column="C_ANEXO" jdbcType="VARCHAR"/>
+        <result property="codDocPadre" column="C_COD_DOC_PADRE" jdbcType="VARCHAR"/>
+        <result property="fechaRegistro" column="D_FECHA_REGISTRO" jdbcType="DATE"/>
+        <result property="usuarioRegistro" column="C_USUARIO_CREACION" jdbcType="VARCHAR"/>
+        <result property="fechaModifica" column="D_FECHA_MODIFICA" jdbcType="DATE"/>
+        <result property="usuarioModifica" column="C_USUARIO_MODIFICA" jdbcType="VARCHAR"/>
+        <result property="idRegVisita" column="N_ID_REG_VISITA" jdbcType="INTEGER"/>
+        <result property="idTipoDocumento" column="N_ID_TIPO_DOCUMENTO" jdbcType="INTEGER"/>
+        <result property="observaciones" column="C_OBSERVACION" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <insert id="documentoInsertar" parameterType="documento">
+        INSERT
+            INTO SAC_REG_DOCUMENTO
+              (
+                N_ID_DOC,
+                C_COD_DOC,
+                C_EXT_DOC,
+                <if test="tamanioDoc != null" >
+                    C_TAMANIO_DOC,
+                </if>
+                N_ESTADO,
+                <if test="rutaDoc != null">
+                    C_RUTA_DOC,
+                </if>
+                C_ANEXO,
+                <if test="observaciones != null">
+                    C_OBSERVACION,
+                </if>
+                <if test="codDocPadre != null">
+                    C_COD_DOC_PADRE,
+                </if>
+                D_FECHA_REGISTRO,
+                C_USUARIO_CREACION,
+                N_ID_REG_VISITA,
+                N_ID_TIPO_DOCUMENTO
+              )
+              VALUES
+              (
+                SEQ_SAC_REG_DOCUMENTO.NextVal,
+                #{codDocumento},
+                #{extensionDoc},
+                <if test="tamanioDoc != null">
+                #{tamanioDoc},
+                </if>
+                #{estado},
+                <if test="rutaDoc != null">
+                   #{rutaDoc},
+                </if>
+                #{anexo},
+                <if test="observaciones != null">
+                #{observaciones},
+                </if>
+                <if test="codDocPadre != null">
+                   #{codDocPadre}, 
+                </if>
+                #{fechaRegistro},
+                #{usuarioRegistro},
+                #{idRegVisita},
+                #{idTipoDocumento}
+              )
+        <selectKey keyProperty="id" resultType="Long">
+            SELECT SEQ_SAC_REG_DOCUMENTO.CURRVAL FROM DUAL
+        </selectKey>
+    </insert>
+    
+    <select id="buscarExpedienteByVisita" resultMap="documentoMap" parameterType="Long">
+        SELECT * FROM SAC_REG_DOCUMENTO WHERE N_ID_REG_VISITA = #{id}
+    </select>
+    
+</mapper>

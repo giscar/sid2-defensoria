@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+
+    <ui:composition template="../template/templateCabeceraExpediente.xhtml">
+        <ui:define name="content2">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item"> 
+                    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home5" role="tab" aria-controls="home5" aria-expanded="true" jsf:action="#{registroController.datosGeneralesExpediente()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-home"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Datos generales</span>
+                    </a> 
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" jsf:rendered="#{registroController.etapaEstado.idEtapa > 0}" jsf:action="#{registroController.cargarExpedienteGestionLista()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Gestiones externas</span>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" jsf:rendered="#{registroController.etapaEstado.idEtapa > 0}" jsf:action="#{registroController.inicioAcciones()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Gestiones internas</span>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" jsf:action="#{registroController.cargarHistorial()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Historial</span>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile"  jsf:rendered="#{registroController.etapaEstado.idEtapa > 0}" jsf:action="#{registroController.cargarCompartir()}">
+                        <span class="hidden-sm-up">
+                            <i class="ti-user"></i>
+                        </span> 
+                        <span class="hidden-xs-down">Compartir</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content tabcontent-border p-20" id="myTabContent">
+                <div role="tabpanel" class="tab-pane fade show active" id="home5" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <br/>
+                                    <h4 class="card-title">Listados de gestiones internas</h4>
+                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                        <a jsf:action="#{registroController.inicioAccionesDerivacion()}" jsf:rendered="#{(registroController.etapaEstado.verEtapa == 1 or registroController.etapaEstado.verEtapa == 5)}" 
+                                            data-toggle="tooltip" data-placement="top" title="Derivar a nuevo comisionado."
+                                           class="btn btn-secondary btn-default" style="color: white">Derivar</a>
+                                        <a jsf:action="#{registroController.inicioAccionesConsultaPublic()}" class="btn btn-secondary btn-default" style="color: white" data-toggle="tooltip" data-placement="top" title="Realice sus consultas a la Primera juntilla" >Consultar</a>
+                                        <a jsf:action="#{registroController.inicioAccionesSuspenderPublic()}" class="btn btn-secondary btn-default" style="color: white" data-toggle="tooltip" data-placement="top" title="Solicite la suspención de dias al trámite.">Suspender</a>
+                                        <a jsf:action="#{registroController.inicioAccionesAmpliarPublic()}" class="btn btn-secondary btn-default" style="color: white" data-toggle="tooltip" data-placement="top" title="Solicite una ampliación de dias a su tramite.">Ampliar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>            

@@ -1,0 +1,164 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:gc="http://xmlns.jcp.org/jsf/composite/gc">
+    <ui:composition template="../template/template.xhtml">
+        <ui:define name="content">
+            <h:form class="form-horizontal">
+                <gc:confirmSubmit bean="#{usuarioDetalleController.guardarUsuario()}" />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group  row">
+                                    <div class="col-6">
+                                        <span style="color:#0074cc;font-size:x-large">Detalle del usuario</span>
+                                    </div>
+                                    <div class="col-3" style="text-align: right">
+                                        <button type="button" id="idBotonGuardar" class="btn btn-info"><i class="fa fa-save"></i> Guardar</button>
+                                    </div>
+                                    <div class="col-3" style="text-align: right">
+                                        <a class="btn btn-danger" jsf:action="#{usuarioNuevoController.regresar}">
+                                                <span class="fas fa-arrow-left"/>Regresar
+                                            </a>
+                                    </div>
+                                </div>
+                                
+                                
+                        <br/>
+                        <hr/>
+                                
+                                
+                                    <h4 class="card-title">Datos del Usuario</h4>
+                                    <div class="form-group row">
+                                        <label for="fname" class="col-sm-3 text-right control-label col-form-label">Código</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" readonly="true" placeholder="Código" jsf:value="#{usuarioDetalleController.usuario.codigo}" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="lname" class="col-sm-3 text-right control-label col-form-label">DNI</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" placeholder="Documento" jsf:value="#{usuarioDetalleController.usuario.dni}" class="form-control"  readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="email1" class="col-sm-3 text-right control-label col-form-label">Nombre</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" placeholder="Nombre" jsf:value="#{usuarioDetalleController.usuario.nombre}" class="form-control"  readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Apellido Paterno</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" placeholder="Apellido Paterno" jsf:value="#{usuarioDetalleController.usuario.apellidoPaterno}" class="form-control"  readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Apellido Materno</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" placeholder="Apellido Materno" jsf:value="#{usuarioDetalleController.usuario.apellidoMaterno}" class="form-control"  readonly="true"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Sexo</label>
+                                        <div class="col-sm-9">
+                                            <h:selectOneRadio class="disabled-form" value="#{usuarioDetalleController.usuario.sexo}">
+                                    <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                                    <f:selectItem itemLabel="Femenino" itemValue="F"/>
+                                </h:selectOneRadio>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Oficina / Programa /Adjuntía Defensorial</label>
+                                        <div class="col-sm-9">
+                                            <h:selectOneMenu class="form-control" value="#{usuarioDetalleController.usuario.codigoOD}">
+                                    <f:selectItem itemValue="0" itemLabel="Seleccione" />
+                                    <f:selectItems value="#{usuarioDetalleController.listaDefensorials}" var="y" itemLabel="#{y.nombre}" itemValue="#{y.id}" />
+                                    <f:ajax render="panelRol"/>
+                                </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Roles</label>
+                                        <div class="col-sm-9">
+                                            <h:panelGroup id="panelRol">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-6">
+                                    <h:selectOneRadio rendered="#{usuarioDetalleController.usuario.codigoOD lt 10000}" value="#{usuarioDetalleController.rolSeleccionado}" layout="pageDirection">
+                                        <f:selectItem itemValue="ROL0000001" itemLabel="COMISIONADO OD" />
+                                        <f:selectItem itemValue="ROL0000002" itemLabel="SUPERVISOR OD" />
+                                        <f:selectItem itemValue="ROL0000005" itemLabel="PRACTICANTE OD" />
+                                        <f:selectItem itemValue="ROL0000011" itemLabel="COMISIONADO OD - CAV" />
+                                        <f:selectItem itemValue="ROL0000010" itemLabel="OBSERVADOR" />
+                                    </h:selectOneRadio>
+                                    <h:selectOneRadio rendered="#{usuarioDetalleController.usuario.codigoOD ge 10000}" value="#{usuarioDetalleController.rolSeleccionado}" layout="pageDirection">
+                                        <f:selectItem itemValue="ROL0000003" itemLabel="COMISIONADO AD" />
+                                        <f:selectItem itemValue="ROL0000004" itemLabel="SUPERVISOR AD" />
+                                        <f:selectItem itemValue="ROL0000006" itemLabel="PRACTICANTE AD" />
+                                        <f:selectItem itemValue="ROL0000007" itemLabel="COMISIONADO PAD" />
+                                        <f:selectItem itemValue="ROL0000010" itemLabel="OBSERVADOR" />
+                                        <f:selectItem itemValue="ROL0000009" itemLabel="OPERADOR - MANTENIMIENTO" />
+                                    </h:selectOneRadio>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               
+                <script>
+                    $("#idBotonGuardar").click(function () {
+                        console.log("entro")
+                        if ($('#idTextDNI').val() === "") {
+                            $('#idTextDNI').addClass('error');
+                            alertar("Debe de ingresar el DNI del usuario");
+                            return false;
+                        }
+                        else {
+                            $('#idTextDNI').removeClass('error');
+                        }
+
+                        if ($('#idTextNombre').val() === "") {
+                            $('#idTextNombre').addClass('error');
+                            alertar("Debe de ingresar el Nombre del usuario");
+                            return false;
+                        }
+                        else {
+                            $('#idTextNombre').removeClass('error');
+                        }
+
+                        if ($('#idTextApellidoPat').val() === "") {
+                            $('#idTextApellidoPat').addClass('error');
+                            alertar("Debe de ingresar el apellido paterno del usuario");
+                            return false;
+                        }
+                        else {
+                            $('#idTextApellidoPat').removeClass('error');
+                        }
+
+                        if ($('#idTextApellidoMat').val() === "") {
+                            $('#idTextApellidoMat').addClass('error');
+                            alertar("Debe de ingresar el apellido materno del usuario");
+                            return false;
+                        }
+                        else {
+                            $('#idTextApellidoMat').removeClass('error');
+                        }
+                        confirmar();
+                    });
+                </script>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
